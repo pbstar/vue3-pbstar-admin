@@ -1,0 +1,41 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+input,
+textarea {
+  outline: none;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #84888d;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #ccc;
+}
