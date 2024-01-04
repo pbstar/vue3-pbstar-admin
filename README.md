@@ -6,7 +6,7 @@
 git clone https://github.com/pbstar/vue3-pbstar-admin.git
 
 # Enter the project directory
-cd vue2-pbstar-admin
+cd vue3-pbstar-admin
 
 # Install dependency
 npm install
@@ -17,8 +17,11 @@ npm run dev
 # Compiles and minifies for production
 npm run build
 
+# Enter the server directory
+cd server
+
 # Start server
-npm run server
+npm run start
 
 ```
 ## 目录结构

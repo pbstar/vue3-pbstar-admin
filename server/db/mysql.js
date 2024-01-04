@@ -11,7 +11,7 @@ module.exports = {
       }
       connection.query(sql, function (err, results, fields) {
         if (err) {
-          access('数据操作失败' + sql)
+          access('数据操作失败：' + sql)
           access(err)
           console.log('数据操作失败');
         } else {
