@@ -26,27 +26,30 @@ npm run start
 ```
 ## 目录结构
 ```
-├── public             # 静态资源 
-│ │── favicon.ico      # 网页图标 
-│ │── config.json      # 全局配置文件 
-│ └── index.html       # html模板 
+├── public             # 静态资源
 ├── server             # 服务端代码 
-│ ├── json             # json数据库 
-│ │ │── role.json      # 角色表
-│ │ └── user.json      # 用户表
+│ ├── db               # 数据库相关
+│ ├── json             # json文件 
+│ ├── logs             # 日志 
+│ ├── module           # 业务模块 
+│ ├── public           # 静态资源服务器
+│ ├── router           # 路由
+│ ├── utils            # 工具类
+│ ├── package.json     # package配置
 │ └── app.js           # 服务端入口文件 
 ├── src                # 源代码 
+│ ├── api              # 接口 
 │ ├── assets           # 静态资源 
-│ │ │── css            # 公共css文件 
-│ │ │── js             # 公共js文件 
-│ │ │── units          # 功能js方法文件 
-│ │ └── imgs           # 图片文件 
 │ ├── components       # 组件 
+│ ├── config           # 配置文件
 │ ├── router           # 路由 
+│ ├── stores           # 状态管理
+│ ├── utils            # 工具类
 │ ├── views            # 所有页面 
 │ ├── App.vue          # 根页面 
 │ └── main.js          # 入口文件 
 ├── .gitignore         # git配置文件 
-├── vue.config.js      # vue-cli配置 
-└── package.json       # package.json
+├── index.html         # html入口文件
+├── vite.config.js     # vite配置 
+└── package.json       # package配置
 ```
