@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const { access } = require('../utils/log')
+const { access } = require('../units/log')
 var databaseConfig = require('./mysql.config');
 module.exports = {
   query: function (sql, callback) {

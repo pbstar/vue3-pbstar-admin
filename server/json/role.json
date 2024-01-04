@@ -2,25 +2,21 @@
   {
     "id": "-1",
     "name": "开发者",
-    "description": "",
     "authority": "adminHome,adminManager,adminReport,adminReportTemplate,adminReportList,adminOrder,adminReportR2,adminReportR3,adminReportR3List,adminReportR3Write,adminOrderR3,adminEditPassword"
   },
   {
     "id": "1",
     "name": "超级管理员",
-    "description": "admin",
     "authority": "adminManager,adminReportTemplate,adminReportList,adminOrder,adminEditPassword"
   },
   {
     "id": "2",
     "name": "店铺管理员",
-    "description": "",
     "authority": "adminReportR2,adminEditPassword"
   },
   {
     "id": "3",
     "name": "店长",
-    "description": "",
     "authority": "adminReportR3List,adminReportR3Write,adminOrderR3,adminEditPassword"
   }
 ]

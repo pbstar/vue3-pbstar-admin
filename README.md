@@ -34,7 +34,7 @@ npm run start
 │ ├── module           # 业务模块 
 │ ├── public           # 静态资源服务器
 │ ├── router           # 路由
-│ ├── utils            # 工具类
+│ ├── units            # 工具类
 │ ├── package.json     # package配置
 │ └── app.js           # 服务端入口文件 
 ├── src                # 源代码 
@@ -44,7 +44,7 @@ npm run start
 │ ├── config           # 配置文件
 │ ├── router           # 路由 
 │ ├── stores           # 状态管理
-│ ├── utils            # 工具类
+│ ├── units            # 工具类
 │ ├── views            # 所有页面 
 │ ├── App.vue          # 根页面 
 │ └── main.js          # 入口文件 

@@ -1,4 +1,5 @@
-function getRoleList(req,res, roleList){
+let roleList = require('../json/role.json')
+function getRoleList(req,res){
   let list = []
   for (let i = 0; i < roleList.length; i++) {
     if (roleList[i].id==2||roleList[i].id==3) {

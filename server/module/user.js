@@ -1,5 +1,6 @@
 const db = require("../db/mysql")
-function getUserList(r, roleList) {
+let roleList = require('../json/role.json')
+function getUserList(r) {
   return new Promise((resolve, reject) => {
     let sql1 = 'select * from user where is_delete=0';
     db.query(sql1, result => {
@@ -27,26 +28,26 @@ function getUserList(r, roleList) {
     })
   })
 }
-function toLogin(r, req, roleList) {
-  return new Promise((resolve, reject) => {
-    let sql = 'select id,name,account,role,child from user where account = "' + req.account + '" and password = "' + req.password + '" and is_delete=0'
-    db.query(sql, result => {
-      if (result.length > 0) {
-        r.data = result[0]
-        for (let i = 0; i < roleList.length; i++) {
-          if (roleList[i].id == r.data.role) {
-            r.data.authority = roleList[i].authority
-            r.data.routeName = roleList[i].authority.split(',')[0]
-          }
-        }
-        resolve(r)
-      } else {
-        r.code = 101
-        r.msg = '账号或密码错误'
-        resolve(r)
-      }
-    })
-  })
+function toLogin(req,res) {
+  // return new Promise((resolve, reject) => {
+  //   let sql = 'select id,name,account,role,child from user where account = "' + req.account + '" and password = "' + req.password + '" and is_delete=0'
+  //   db.query(sql, result => {
+  //     if (result.length > 0) {
+  //       r.data = result[0]
+  //       for (let i = 0; i < roleList.length; i++) {
+  //         if (roleList[i].id == r.data.role) {
+  //           r.data.authority = roleList[i].authority
+  //           r.data.routeName = roleList[i].authority.split(',')[0]
+  //         }
+  //       }
+  //       resolve(r)
+  //     } else {
+  //       r.code = 101
+  //       r.msg = '账号或密码错误'
+  //       resolve(r)
+  //     }
+  //   })
+  // })
 }
 function toEditUserPassword(r, req) {
   return new Promise((resolve, reject) => {
