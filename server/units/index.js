@@ -1,9 +1,3 @@
-import config from "@/config";
-function isMobile() {
-  let m =
-    /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i;
-  return navigator.userAgent.match(m);
-}
 function strToBase64(str) {
   if (str) {
     let encode = encodeURI(str);
@@ -17,28 +11,6 @@ function base64ToStr(base64) {
     let str = decodeURI(decode);
     return str;
   }
-}
-function getLocalStorage(name) {
-  if (name) {
-    let value = localStorage.getItem(config.proName + '-' + name);
-    if (!value || value === "undefined" || value === "null") return "";
-    return base64ToStr(value);
-  }
-}
-function setLocalStorage(name, value) {
-  if (name) {
-    if (!value || value === "undefined" || value === "null") {
-      localStorage.setItem(config.proName + '-' + name, "");
-    } else {
-      localStorage.setItem(config.proName + '-' + name, strToBase64(value));
-    }
-  }
-}
-function removeLocalStorage(name) {
-  if (name) localStorage.removeItem(config.proName + '-' + name);
-}
-function clearLocalStorage() {
-  localStorage.clear()
 }
 function getRandomStr(num) {
   const chars = [
@@ -80,14 +52,9 @@ function formatDate(date, type) {
   }
 
 };
-export default {
-  isMobile,
+module.exports = {
   strToBase64,
   base64ToStr,
-  getLocalStorage,
-  setLocalStorage,
-  removeLocalStorage,
-  clearLocalStorage,
   getRandomStr,
   formatDate
 };

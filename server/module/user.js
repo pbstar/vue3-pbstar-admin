@@ -1,9 +1,10 @@
 const db = require("../db/mysql")
+const { strToBase64, getRandomStr } = require('../units/index')
 let roleList = require('../json/role.json')
-function getRoleList(req,res){
+function getRoleList(req, res) {
   let list = []
   for (let i = 0; i < roleList.length; i++) {
-    if (roleList[i].id>1) {
+    if (roleList[i].id > 1) {
       list.push(roleList[i])
     }
   }
@@ -41,27 +42,42 @@ function getUserList(r) {
     })
   })
 }
-function toLogin(req,res) {
-  console.log(req.body);
-  // return new Promise((resolve, reject) => {
-  //   let sql = 'select id,name,account,role,child from user where account = "' + req.account + '" and password = "' + req.password + '" and is_delete=0'
-  //   db.query(sql, result => {
-  //     if (result.length > 0) {
-  //       r.data = result[0]
-  //       for (let i = 0; i < roleList.length; i++) {
-  //         if (roleList[i].id == r.data.role) {
-  //           r.data.authority = roleList[i].authority
-  //           r.data.routeName = roleList[i].authority.split(',')[0]
-  //         }
-  //       }
-  //       resolve(r)
-  //     } else {
-  //       r.code = 101
-  //       r.msg = '账号或密码错误'
-  //       resolve(r)
-  //     }
-  //   })
-  // })
+function toLogin(req, res) {
+  let r = {
+    code: 200,
+    data: null
+  }
+  let sql = 'select id,name,account,role from user where account = "' + req.p.account + '" and password = "' + req.p.password + '" and is_delete=0'
+  db.query(sql, result => {
+    if (result.length > 0) {
+      r.data = {
+        info: result[0],
+      }
+      for (let i = 0; i < roleList.length; i++) {
+        if (roleList[i].id == r.data.info.role) {
+          r.data.info.authority = roleList[i].authority
+          r.data.routeName = roleList[i].authority.split(',')[0]
+        }
+      }
+      let token = strToBase64(r.data.info.id) + "_" + strToBase64(new Date().getTime()) + "_" + strToBase64(getRandomStr(4))
+      let sql2 = 'UPDATE user SET token = "' + token + '" WHERE id = "' + r.data.info.id + '"'
+      db.query(sql2, result => {
+        if (result.affectedRows > 0) {
+          r.data.token = token
+          res.send(r)
+        }
+        else {
+          r.code = 102
+          r.msg = '生成token失败'
+          res.send(r)
+        }
+      })
+    } else {
+      r.code = 101
+      r.msg = '账号或密码错误'
+      res.send(r)
+    }
+  })
 }
 function toEditUserPassword(r, req) {
   return new Promise((resolve, reject) => {
