@@ -15,9 +15,46 @@ const router = createRouter({
       redirect: '/login'
     },
     {
-      path: '/login',
-      name: 'login',
+      path: '/admin',
+      name: 'admin',
+      redirect: '/admin/home',
+      component: () => import('@/views/admin/index.vue'),
+      children: [
+        {
+          path: "home",
+          name: "adminHome",
+          meta: { title: "首页" },
+          component: () => import('@/views/admin/home/index.vue')
+        },{
+          path: "editPassword",
+          name: "adminEditPassword",
+          meta: { title: "修改密码" },
+          component: () => import('@/views/admin/editPassword/index.vue')
+        },{
+          path: "user",
+          name: "adminUser",
+          meta: { title: "用户管理" },
+          component: () => import('@/views/admin/user/index.vue')
+        },
+      ]
+    },
+    {
+      path: "/login",
+      name: "login",
+      meta: { title: "登录" },
       component: () => import('@/views/login/index.vue')
+    },
+    {
+      path: "/403",
+      name: "403",
+      meta: { title: "无权限访问" },
+      component: () => import('@/views/403/index.vue')
+    },
+    {
+      path: "/:path(.*)",
+      name: "404",
+      meta: { title: "没找到页面" },
+      component: () => import('@/views/404/index.vue')
     }
   ]
 })
@@ -25,14 +62,16 @@ router.beforeEach((to, from, next) => {
   if (to.matched.length > 0 && to.matched[0].name == "admin") {
     let token = units.getLocalStorage("token")
     if (!token) {
-      toLogin(next)
+      NProgress.start()
+        next()
+      // toLogin(next)
     } else {
       if (lastRequestTime && new Date().getTime() - lastRequestTime < config.checkTokenTime) {
         NProgress.start()
         next()
       } else {
         lastRequestTime = new Date().getTime();
-        toCheckToken(next,token)
+        toCheckToken(next, token)
       }
     }
   } else {
@@ -65,16 +104,16 @@ const toLogin = (next) => {
     name: "login",
   })
 }
-const toCheckToken = (next,token) => {
-    // let userAuthority = this.$unit.getLocalStorage("userAuthority");
-      // let userAuthorityArr = userAuthority ? userAuthority.split(",") : [];
-      // if (!userAuthorityArr.includes(to.name)) {
-      //   this.$router.push({
-      //     name: "403",
-      //   });
-      // }else{
-      //   next();
-      // }
+const toCheckToken = (next, token) => {
+  // let userAuthority = this.$unit.getLocalStorage("userAuthority");
+  // let userAuthorityArr = userAuthority ? userAuthority.split(",") : [];
+  // if (!userAuthorityArr.includes(to.name)) {
+  //   this.$router.push({
+  //     name: "403",
+  //   });
+  // }else{
+  //   next();
+  // }
   console.log(token);
 }
 export default router

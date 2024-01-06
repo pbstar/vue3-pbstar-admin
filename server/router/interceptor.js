@@ -1,15 +1,12 @@
 const { access } = require('../units/log')
-module.exports = (req, res, next)=>{
-  console.log({
-    url: req.url,
-    query: req.query,
-    params: req.params
-  });
-  if (req.method=='POST') {
+module.exports = (req, res, next) => {
+  if (req.method == 'POST') req.p = req.body
+  else if (req.method == 'GET') req.p = req.query
+  if (req.method == 'POST') {
     access({
       url: req.url,
-      query: req.query,
-      params: req.params
+      method: req.method,
+      p: req.p
     })
   }
   next()

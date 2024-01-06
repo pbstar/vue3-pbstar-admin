@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore('user', () => {
+export default defineStore('user', () => {
   let info = ref(null)
 
   function getInfo() {
@@ -11,5 +11,5 @@ export const useCounterStore = defineStore('user', () => {
     info.value = e
   }
 
-  return { info, getInfo, changeInfo }
+  return { getInfo, changeInfo }
 })

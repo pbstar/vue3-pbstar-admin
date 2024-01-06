@@ -3,7 +3,7 @@ module.exports = {
   // host: 'localhost',
   host: '43.138.29.120',
   port: 3306,
-  user: 'hkadmin',
-  password: 'hk2023',
-  database: 'hkadmin'
+  database: 'v3_pbstar_admin',
+  user: 'v3_pbstar_admin',
+  password: '3NxyCHxfSzhwtXaB'
 };

@@ -77,9 +77,7 @@ function post(url, d) {
   data.token = units.getLocalStorage('token')
   return new Promise((resolve, reject) => {
     axios
-      .post(baseURL + url, {
-        params: data,
-      })
+      .post(baseURL + url, data)
       .then((response) => {
         NProgress.done()
         resolve(response.data);

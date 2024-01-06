@@ -1,5 +1,18 @@
 const db = require("../db/mysql")
 let roleList = require('../json/role.json')
+function getRoleList(req,res){
+  let list = []
+  for (let i = 0; i < roleList.length; i++) {
+    if (roleList[i].id>1) {
+      list.push(roleList[i])
+    }
+  }
+  res.send({
+    code: 200,
+    data: list,
+    msg: '获取成功'
+  })
+}
 function getUserList(r) {
   return new Promise((resolve, reject) => {
     let sql1 = 'select * from user where is_delete=0';
@@ -29,6 +42,7 @@ function getUserList(r) {
   })
 }
 function toLogin(req,res) {
+  console.log(req.body);
   // return new Promise((resolve, reject) => {
   //   let sql = 'select id,name,account,role,child from user where account = "' + req.account + '" and password = "' + req.password + '" and is_delete=0'
   //   db.query(sql, result => {
@@ -124,21 +138,6 @@ function toAddUser(r, req) {
     })
   })
 }
-function toDistributionManager(r, req) {
-  return new Promise((resolve, reject) => {
-    let sql = 'UPDATE user SET child = "' + req.child + '"' + ' WHERE id = "' + req.id + '"'
-    db.query(sql, result => {
-      if (result.affectedRows > 0) {
-        resolve(r)
-      }
-      else {
-        r.code = 101
-        r.msg = '分配失败'
-        resolve(r)
-      }
-    })
-  })
-}
 module.exports = {
   getUserList,
   toLogin,
@@ -146,6 +145,6 @@ module.exports = {
   toResetUserPassword,
   toDelUser,
   toAddUser,
-  toDistributionManager,
-  toEditUser
+  toEditUser,
+  getRoleList
 }
