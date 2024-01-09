@@ -60,6 +60,7 @@ function toLogin(req, res) {
         }
       }
       let token = strToBase64(r.data.info.id) + "_" + strToBase64(new Date().getTime()) + "_" + strToBase64(getRandomStr(4))
+      token = strToBase64(token)
       let sql2 = 'UPDATE user SET token = "' + token + '" WHERE id = "' + r.data.info.id + '"'
       db.query(sql2, result => {
         if (result.affectedRows > 0) {

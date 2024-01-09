@@ -47,6 +47,8 @@ function formatDate(date, type) {
     return y + "-" + m + "-" + d + " " + hour + ":" + minute + ":" + second;
   } else if (type == "YY-MM-DD") {
     return y + "-" + m + "-" + d;
+  } else if (type == "YYMMDD") {
+    return y.toString() + m.toString() + d.toString();
   } else {
     return "未知格式";
   }

@@ -15,7 +15,7 @@ function createWriteStream(fileName) {
 }
 
 function access(log) {
-  const accessWriteStream = createWriteStream(formatDate(null, "YY-MM-DD") + '.log')
+  const accessWriteStream = createWriteStream(formatDate(null, "YYMMDD") + '.log')
   if (typeof log !== 'string') {
     log = JSON.stringify(log)
   }
