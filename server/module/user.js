@@ -1,5 +1,5 @@
 const db = require("../db/mysql")
-const { strToBase64, getRandomStr } = require('../units/index')
+const { strToBase64, base64ToStr,getRandomStr } = require('../units/index')
 let roleList = require('../json/role.json')
 function getRoleList(req, res) {
   let list = []
@@ -77,6 +77,54 @@ function toLogin(req, res) {
       r.code = 101
       r.msg = '账号或密码错误'
       res.send(r)
+    }
+  })
+}
+function getInfoByToken(req, res){
+  if(req.p.token == null || req.p.token == ''){
+    res.send({
+      code: 101,
+      data: null,
+      msg: 'token无效'
+    })
+    return
+  }
+  let tokenArr=base64ToStr(req.p.token).split('_')
+  for(let i=0;i<tokenArr.length;i++){
+    tokenArr[i]=base64ToStr(tokenArr[i])
+  }
+  if(tokenArr.length!=3){
+    res.send({
+      code: 101,
+      data: null,
+      msg: 'token无效'
+    })
+    return
+  }
+  if (tokenArr[1]<new Date().getTime()-3*24*60*60*1000){
+    res.send({
+      code: 101,
+      data: null,
+      msg: 'token无效'
+    })
+    return
+  }
+  let sql = 'select id,name,account,role from user where token = "' + req.token + '"'
+  db.query(sql, result => {
+    if (result.length > 0) {
+      res.send({
+        code: 101,
+        data: result[0],
+        msg: '获取成功'
+      })
+      return
+    } else {
+      res.send({
+        code: 101,
+        data: null,
+        msg: 'token无效'
+      })
+      return
     }
   })
 }
@@ -158,6 +206,7 @@ function toAddUser(r, req) {
 module.exports = {
   getUserList,
   toLogin,
+  getInfoByToken,
   toEditUserPassword,
   toResetUserPassword,
   toDelUser,
