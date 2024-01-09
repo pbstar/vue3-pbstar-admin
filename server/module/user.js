@@ -1,5 +1,5 @@
 const db = require("../db/mysql")
-const { strToBase64, base64ToStr,getRandomStr } = require('../units/index')
+const { strToBase64, base64ToStr, getRandomStr } = require('../units/index')
 let roleList = require('../json/role.json')
 function getRoleList(req, res) {
   let list = []
@@ -80,8 +80,8 @@ function toLogin(req, res) {
     }
   })
 }
-function getInfoByToken(req, res){
-  if(req.p.token == null || req.p.token == ''){
+function getInfoByToken(req, res) {
+  if (req.p.token == null || req.p.token == '') {
     res.send({
       code: 101,
       data: null,
@@ -89,38 +89,47 @@ function getInfoByToken(req, res){
     })
     return
   }
-  let tokenArr=base64ToStr(req.p.token).split('_')
-  for(let i=0;i<tokenArr.length;i++){
-    tokenArr[i]=base64ToStr(tokenArr[i])
+  let tokenArr = base64ToStr(req.p.token).split('_')
+  for (let i = 0; i < tokenArr.length; i++) {
+    tokenArr[i] = base64ToStr(tokenArr[i])
   }
-  if(tokenArr.length!=3){
+  if (tokenArr.length != 3) {
     res.send({
-      code: 101,
+      code: 102,
       data: null,
       msg: 'token无效'
     })
     return
   }
-  if (tokenArr[1]<new Date().getTime()-3*24*60*60*1000){
+  if (tokenArr[1] < new Date().getTime() - 3 * 24 * 60 * 60 * 1000) {
     res.send({
-      code: 101,
+      code: 103,
       data: null,
       msg: 'token无效'
     })
     return
   }
-  let sql = 'select id,name,account,role from user where token = "' + req.token + '"'
+  let sql = 'select id,name,account,role from user where token = "' + req.p.token + '"'
   db.query(sql, result => {
     if (result.length > 0) {
-      res.send({
-        code: 101,
-        data: result[0],
+      let r = {
+        code: 200,
+        data: {
+          info: result[0]
+        },
         msg: '获取成功'
-      })
+      }
+      for (let i = 0; i < roleList.length; i++) {
+        if (roleList[i].id == r.data.info.role) {
+          r.data.info.authority = roleList[i].authority
+          r.data.routeName = roleList[i].authority.split(',')[0]
+        }
+      }
+      res.send(r)
       return
     } else {
       res.send({
-        code: 101,
+        code: 104,
         data: null,
         msg: 'token无效'
       })
