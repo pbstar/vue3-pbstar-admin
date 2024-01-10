@@ -77,10 +77,14 @@ export default {
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
-const account = ref("123")
-const password = ref("123")
-const password1 = ref("123")
+import useUserStore from '@/stores/user'
+const userStore = useUserStore()
+const account = ref("")
+const password = ref("")
+const password1 = ref("")
 onMounted(() => {
+  let userInfo=userStore.getInfo()
+  account.value=userInfo.account
 })
 const onSubmit = () => {
   // if (!this.password || !this.password1) {
