@@ -28,7 +28,11 @@ function getRandomStr(num) {
 }
 function formatDate(date, type) {
   if (date) {
-    date = new Date(date);
+    if (date.constructor === String && date.length === 13) {
+      date = new Date(parseInt(date));
+    } else {
+      date = new Date(date);
+    }
   } else {
     date = new Date();
   }

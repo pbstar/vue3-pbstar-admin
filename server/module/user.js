@@ -1,5 +1,5 @@
 const db = require("../db/mysql")
-const { strToBase64, base64ToStr, getRandomStr } = require('../units/index')
+const { strToBase64, base64ToStr, getRandomStr, formatDate } = require('../units/index')
 let roleList = require('../json/role.json')
 function getRoleList(req, res) {
   let list = []
@@ -115,7 +115,12 @@ function getInfoByToken(req, res) {
       let r = {
         code: 200,
         data: {
-          info: result[0]
+          info: result[0],
+          tokenInfo: {
+            token: req.p.token,
+            userId: tokenArr[0],
+            time: formatDate(tokenArr[1], "YY-MM-DD hh:mm:ss"),
+          }
         },
         msg: '获取成功'
       }

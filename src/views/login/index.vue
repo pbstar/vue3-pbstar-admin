@@ -25,9 +25,7 @@ const title = ref(config.title);
 const isLoading = ref(false);
 const account = ref("");
 const password = ref("");
-onMounted(() => { 
-console.log(userStore.getInfo());
-});
+onMounted(() => {});
 const toSend = () => {
   if (account.value === "" || password.value === "") {
     ElMessage.error("账号或密码不能为空")
