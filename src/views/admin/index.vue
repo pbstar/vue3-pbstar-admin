@@ -45,6 +45,7 @@ const changeFold = (e) => {
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: auto;
 
     .rTop {
       width: 100%;

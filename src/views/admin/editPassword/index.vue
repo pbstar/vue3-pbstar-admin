@@ -78,37 +78,45 @@ export default {
 <script setup>
 import { ref, onMounted } from 'vue'
 import useUserStore from '@/stores/user'
+import {
+  toEditUserPassword
+} from "@/api/module/user";
+import units from "@/units";
+import { useRouter } from "vue-router";
+const router = useRouter()
 const userStore = useUserStore()
 const account = ref("")
 const password = ref("")
 const password1 = ref("")
+const userId = ref("")
 onMounted(() => {
-  let userInfo=userStore.getInfo()
-  account.value=userInfo.account
+  let userInfo = userStore.getInfo()
+  account.value = userInfo.account
+  userId.value = userInfo.id
 })
 const onSubmit = () => {
-  // if (!this.password || !this.password1) {
-  //   this.$message.error("密码不能为空");
-  //   return;
-  // }
-  // if (this.password != this.password1) {
-  //   this.$message.error("两次密码不一致");
-  //   return;
-  // }
-  // toEditUserPassword({
-  //   id: this.id,
-  //   password: this.password
-  // }).then(res => {
-  //   if (res.code == 200) {
-  //     this.$message.success("修改成功");
-  //     this.$unit.clearLocalStorage();
-  //     this.$router.push({
-  //       name: "login",
-  //     });
-  //   } else {
-  //     this.$message.error("修改失败");
-  //   }
-  // })
+  if (!password.value || !password1.value) {
+    ElMessage.error("密码不能为空")
+    return;
+  }
+  if (password.value != password1.value) {
+    ElMessage.error("两次密码不一致")
+    return;
+  }
+  toEditUserPassword({
+    id: userId.value,
+    password: password.value
+  }).then(res => {
+    if (res.code == 200) {
+      ElMessage.success("修改成功")
+      units.clearLocalStorage();
+      router.push({
+        name: "login"
+      })
+    } else {
+      ElMessage.error("修改失败")
+    }
+  })
 }
 </script>
 <style lang="scss" scoped>

@@ -14,31 +14,25 @@ function getRoleList(req, res) {
     msg: '获取成功'
   })
 }
-function getUserList(r) {
-  return new Promise((resolve, reject) => {
-    let sql1 = 'select * from user where is_delete=0';
-    db.query(sql1, result => {
-      let list = []
-      for (let i = 0; i < result.length; i++) {
-        if (result[i].role == 2 || result[i].role == 3) {
-          let obj = {}
-          obj.id = result[i].id
-          obj.name = result[i].name
-          obj.account = result[i].account
-          obj.role = result[i].role
-          obj.role_name = ""
-          for (let j = 0; j < roleList.length; j++) {
-            if (roleList[j].id == result[i].role) {
-              obj.role_name = roleList[j].name
-            }
+function getUserList(req, res) {
+  let sql1 = 'select id,name,account,role,create_time from user where is_delete=0';
+  db.query(sql1, result => {
+    let list = []
+    for (let i = 0; i < result.length; i++) {
+      if (result[i].role == 2 || result[i].role == 3) {
+        result[i].role_name = ""
+        for (let j = 0; j < roleList.length; j++) {
+          if (roleList[j].id == result[i].role) {
+            result[i].role_name = roleList[j].name
           }
-          obj.create_time = result[i].create_time
-          obj.child = result[i].child
-          list.push(obj)
         }
+        list.push(result[i])
       }
-      r.data = list
-      resolve(r)
+    }
+    res.send({
+      code: 200,
+      data: list,
+      msg: '获取成功'
     })
   })
 }
@@ -80,12 +74,11 @@ function toLogin(req, res) {
     }
   })
 }
-function getInfoByToken(req, res) {
-  if (req.p.token == null || req.p.token == '') {
+function checkTokenFnc(type, req, res, next) {
+  if (req.p.token == null || req.p.token == '' || req.p.token == undefined) {
     res.send({
       code: 101,
-      data: null,
-      msg: 'token无效'
+      msg: 'token缺失'
     })
     return
   }
@@ -96,7 +89,6 @@ function getInfoByToken(req, res) {
   if (tokenArr.length != 3) {
     res.send({
       code: 102,
-      data: null,
       msg: 'token无效'
     })
     return
@@ -104,57 +96,67 @@ function getInfoByToken(req, res) {
   if (tokenArr[1] < new Date().getTime() - 3 * 24 * 60 * 60 * 1000) {
     res.send({
       code: 103,
-      data: null,
-      msg: 'token无效'
+      msg: 'token过期'
     })
     return
   }
   let sql = 'select id,name,account,role from user where token = "' + req.p.token + '"'
   db.query(sql, result => {
     if (result.length > 0) {
-      let r = {
-        code: 200,
-        data: {
-          info: result[0],
-          tokenInfo: {
-            token: req.p.token,
-            userId: tokenArr[0],
-            time: formatDate(tokenArr[1], "YY-MM-DD hh:mm:ss"),
-          }
-        },
-        msg: '获取成功'
-      }
-      for (let i = 0; i < roleList.length; i++) {
-        if (roleList[i].id == r.data.info.role) {
-          r.data.info.authority = roleList[i].authority
-          r.data.routeName = roleList[i].authority.split(',')[0]
+      if (type == 'getInfo') {
+        let r = {
+          code: 200,
+          data: {
+            info: result[0],
+            tokenInfo: {
+              token: req.p.token,
+              userId: tokenArr[0],
+              time: formatDate(tokenArr[1], "YY-MM-DD hh:mm:ss"),
+            }
+          },
+          msg: '获取成功'
         }
+        for (let i = 0; i < roleList.length; i++) {
+          if (roleList[i].id == r.data.info.role) {
+            r.data.info.authority = roleList[i].authority
+            r.data.routeName = roleList[i].authority.split(',')[0]
+          }
+        }
+        res.send(r)
+      } else if (type == 'checkToken') {
+        next()
       }
-      res.send(r)
-      return
     } else {
       res.send({
         code: 104,
-        data: null,
-        msg: 'token无效'
+        msg: 'token失效'
       })
-      return
     }
   })
 }
-function toEditUserPassword(r, req) {
-  return new Promise((resolve, reject) => {
-    let sql = 'UPDATE user SET password = "' + req.password + '" WHERE id = "' + req.id + '"'
-    db.query(sql, result => {
-      if (result.affectedRows > 0) {
-        resolve(r)
-      }
-      else {
-        r.code = 101
-        r.msg = '修改失败'
-        resolve(r)
-      }
-    })
+function toCheckToken(req, res, next) {
+  checkTokenFnc('checkToken', req, res, next)
+}
+
+function getInfoByToken(req, res) {
+  checkTokenFnc('getInfo', req, res)
+}
+function toEditUserPassword(req, res) {
+  let sql = 'UPDATE user SET password = "' + req.p.password + '" WHERE id = "' + req.p.id + '"'
+  db.query(sql, result => {
+    if (result.affectedRows > 0) {
+      res.send({
+        code: 200,
+        data: null,
+        msg: '修改成功'
+      })
+    }
+    else {
+      res.send({
+        code: 101,
+        msg: '修改失败'
+      })
+    }
   })
 }
 function toEditUser(r, req) {
@@ -172,49 +174,50 @@ function toEditUser(r, req) {
     })
   })
 }
-function toResetUserPassword(r, req) {
-  return new Promise((resolve, reject) => {
-    let sql = 'UPDATE user SET password = "12345678" WHERE id = "' + req.id + '"'
-    db.query(sql, result => {
-      if (result.affectedRows > 0) {
-        resolve(r)
-      }
-      else {
-        r.code = 101
-        r.msg = '修改失败'
-        resolve(r)
-      }
-    })
+function toResetUserPassword(req, res) {
+  let sql = 'UPDATE user SET password = "12345678" WHERE id = "' + req.p.id + '"'
+  db.query(sql, result => {
+    if (result.affectedRows > 0) {
+      res.send({
+        code: 200,
+        msg: '重置成功'
+      })
+    }
+    else {
+      res.send({ code: 101, msg: '重置失败' })
+    }
   })
 }
-function toDelUser(r, req) {
-  return new Promise((resolve, reject) => {
-    let sql = 'UPDATE user SET is_delete = "1" WHERE id = "' + req.id + '"'
-    db.query(sql, result => {
-      if (result.affectedRows > 0) {
-        resolve(r)
-      }
-      else {
-        r.code = 101
-        r.msg = '删除失败'
-        resolve(r)
-      }
-    })
+function toDelUser(req, res) {
+  let sql = 'UPDATE user SET is_delete = "1" WHERE id = "' + req.p.id + '"'
+  db.query(sql, result => {
+    if (result.affectedRows > 0) {
+      res.send({
+        code: 200,
+        msg: '删除成功'
+      })
+    } else {
+      res.send({
+        code: 101,
+        msg: '删除失败'
+      })
+    }
   })
 }
-function toAddUser(r, req) {
-  return new Promise((resolve, reject) => {
-    let sql = 'INSERT INTO user (name,account,password,role,create_time,is_delete) VALUES ("' + req.name + '","' + req.account + '","' + req.password + '","' + req.role + '","' + req.create_time + '","0")'
-    db.query(sql, result => {
-      if (result.affectedRows > 0) {
-        resolve(r)
-      }
-      else {
-        r.code = 101
-        r.msg = '添加失败'
-        resolve(r)
-      }
-    })
+function toAddUser(req, res) {
+  let sql = 'INSERT INTO user (name,account,password,role,create_time,is_delete) VALUES ("' + req.p.name + '","' + req.p.account + '","' + req.p.password + '","' + req.p.role + '","' + req.p.create_time + '","0")'
+  db.query(sql, result => {
+    if (result.affectedRows > 0) {
+      res.send({
+        code: 200,
+        msg: '添加成功'
+      })
+    } else {
+      res.send({
+        code: 101,
+        msg: '添加失败'
+      })
+    }
   })
 }
 module.exports = {
@@ -226,5 +229,6 @@ module.exports = {
   toDelUser,
   toAddUser,
   toEditUser,
-  getRoleList
+  getRoleList,
+  toCheckToken
 }
