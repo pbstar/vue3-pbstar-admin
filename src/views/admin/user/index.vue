@@ -157,7 +157,11 @@ const toUser = () => {
 }
 const toReset = (row) => {
   ElMessageBox.confirm(
-    "确认为" + row.name + "重置密码吗？重置后的初始密码为12345678"
+    "确认为" + row.name + "重置密码吗？重置后的初始密码为12345678",
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消'
+    }
   ).then(() => {
     toResetUserPassword({ id: row.id }).then((res) => {
       if (res.code == 200) {
@@ -172,7 +176,11 @@ const toReset = (row) => {
 
 const toDel = (row) => {
   ElMessageBox.confirm(
-    "确认删除吗？"
+    "确认删除吗？",
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消'
+    }
   ).then(() => {
     toDelUser({ id: row.id }).then((res) => {
       if (res.code == 200) {
