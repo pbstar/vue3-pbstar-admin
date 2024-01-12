@@ -30,5 +30,8 @@ router.post('/user/toAddUser', (req, res) => {
 router.post('/user/toDelUser', (req, res) => {
   user.toDelUser(req,res)
 })
+router.post('/user/toEditUser', (req, res) => {
+  user.toEditUser(req,res)
+})
 
 module.exports = router 

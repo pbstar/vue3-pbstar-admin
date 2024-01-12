@@ -6,6 +6,9 @@ export function getInfoByToken(e) {
 export function getUserList(e) {
   return http.get("/user/getUserList", e)
 }
+export function getRoleList(e) {
+  return http.get("/user/getRoleList", e)
+}
 export function toLogin(e) {
   return http.post("/user/toLogin", e)
 }
@@ -20,4 +23,7 @@ export function toDelUser(e) {
 }
 export function toResetUserPassword(e) {
   return http.post("/user/toResetUserPassword", e)
+}
+export function toEditUser(e) {
+  return http.post("/user/toEditUser", e)
 }

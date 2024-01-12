@@ -1,11 +1,11 @@
 <template>
   <div class="page">
-    <div class="left" :class="isFold?'fold':''">
-      <AdminLeft :isFold="isFold"/>
+    <div class="left" :class="isFold ? 'fold' : ''">
+      <AdminLeft :isFold="isFold" />
     </div>
     <div class="right">
       <div class="rTop">
-        <AdminRightTop @changeFold="changeFold"/>
+        <AdminRightTop @changeFold="changeFold" />
       </div>
       <div class="rMid">
         <RouterView />
@@ -22,7 +22,7 @@ const isFold = ref(false)
 onMounted(() => {
 })
 const changeFold = (e) => {
-  isFold.value=e
+  isFold.value = e
 }
 </script>
 <style scoped lang="scss">
@@ -35,7 +35,9 @@ const changeFold = (e) => {
     background-color: var(--p-bg-color-light);
     width: var(--admin-left-width-show);
     overflow: hidden;
+    flex-shrink: 0;
   }
+
   .left.fold {
     width: var(--admin-left-width-hide);
   }
