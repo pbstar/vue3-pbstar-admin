@@ -126,7 +126,7 @@ function getInfoByToken(req, res) {
   checkTokenFnc('getInfo', req, res)
 }
 function toEditUserPassword(req, res) {
-  let sql = 'UPDATE user SET password = "' + req.p.password + '" WHERE id = "' + req.p.id + '"'
+  let sql = 'UPDATE user SET password = "' + req.p.password + '",token = "" WHERE id = "' + req.p.id + '"'
   db.query(sql, result => {
     if (result.affectedRows > 0) {
       res.send({ code: 200, msg: '修改成功' })
@@ -136,7 +136,7 @@ function toEditUserPassword(req, res) {
   })
 }
 function toEditUser(req, res) {
-  let sql = 'UPDATE user SET name = "' + req.p.name + '",account = "' + req.p.account + '",role = "' + req.p.role + '" WHERE id = "' + req.p.id + '"'
+  let sql = 'UPDATE user SET name = "' + req.p.name + '",account = "' + req.p.account + '",role = "' + req.p.role + '",token = "" WHERE id = "' + req.p.id + '"'
   db.query(sql, result => {
     if (result.affectedRows > 0) {
       res.send({ code: 200, msg: '修改成功' })
@@ -146,7 +146,7 @@ function toEditUser(req, res) {
   })
 }
 function toResetUserPassword(req, res) {
-  let sql = 'UPDATE user SET password = "12345678" WHERE id = "' + req.p.id + '"'
+  let sql = 'UPDATE user SET password = "12345678",token = "" WHERE id = "' + req.p.id + '"'
   db.query(sql, result => {
     if (result.affectedRows > 0) {
       res.send({ code: 200, msg: '重置成功' })
@@ -156,7 +156,7 @@ function toResetUserPassword(req, res) {
   })
 }
 function toDelUser(req, res) {
-  let sql = 'UPDATE user SET is_delete = "1" WHERE id = "' + req.p.id + '"'
+  let sql = 'UPDATE user SET is_delete = "1",token = "" WHERE id = "' + req.p.id + '"'
   db.query(sql, result => {
     if (result.affectedRows > 0) {
       res.send({ code: 200, msg: '删除成功' })
@@ -166,7 +166,7 @@ function toDelUser(req, res) {
   })
 }
 function toAddUser(req, res) {
-  let sql = 'INSERT INTO user (name,account,password,role,create_time,is_delete) VALUES ("' + req.p.name + '","' + req.p.account + '","' + req.p.password + '","' + req.p.role + '","' + req.p.create_time + '","0")'
+  let sql = 'INSERT INTO user (name,account,password,role,create_time,is_delete,token) VALUES ("' + req.p.name + '","' + req.p.account + '","' + req.p.password + '","' + req.p.role + '","' + req.p.create_time + '","0","")'
   db.query(sql, result => {
     if (result.affectedRows > 0) {
       res.send({ code: 200, msg: '添加成功' })
