@@ -1,0 +1,1 @@
+import{bu as c,j as a,a as u,K as i,i as d}from"./index-rvzZSy2J.js";const s={prefix:Math.floor(Math.random()*1e4),current:0},I=Symbol("elIdInjection"),f=()=>i()?d(I,s):s,m=e=>{const t=f(),n=c();return a(()=>u(e)||`${n.value}-id-${t.prefix}-${t.current++}`)},_=(e,t)=>{const n=e.__vccOpts||e;for(const[o,r]of t)n[o]=r;return n};export{_,f as a,m as u};

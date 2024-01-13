@@ -1,0 +1,1 @@
+import{o as e,c as t}from"./index-rvzZSy2J.js";import{E as c}from"./el-empty-h2G7mD11.js";import{_ as r}from"./_plugin-vue_export-helper-QQhFdce-.js";const n={};function s(_,m){const o=c;return e(),t(o,{description:"没有找到该页面"})}const i=r(n,[["render",s]]);export{i as default};
