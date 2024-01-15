@@ -15,6 +15,9 @@ router.get('/user/getUserList', (req, res) => {
 router.post('/user/toLogin', (req, res) => {
   user.toLogin(req,res)
 })
+router.post('/user/toLogout', (req, res) => {
+  user.toLogout(req,res)
+})
 router.get('/user/getInfoByToken', (req, res) => {
   user.getInfoByToken(req,res)
 })

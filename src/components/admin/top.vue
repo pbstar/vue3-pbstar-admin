@@ -30,27 +30,42 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from "vue-router";
+import { toLogout } from "@/api/module/user";
+import units from "@/units";
+import useUserStore from '@/stores/user'
+const userStore = useUserStore()
 const router = useRouter()
 const emit = defineEmits(['changeFold'])
-const username = ref("123")
+const username = ref("")
+const userId = ref("")
 const isCollapse = ref(false)
 onMounted(() => {
-  // fuc()
+  let userInfo = userStore.getInfo()
+  username.value = userInfo.name
+  userId.value = userInfo.id
 })
 const toCollapse = () => {
   isCollapse.value = !isCollapse.value
-  emit('changeFold',isCollapse.value)
+  emit('changeFold', isCollapse.value)
 }
 const handleCommand = (e) => {
-  if(e=='a'){
+  if (e == 'a') {
     router.push({
-    name:"adminEditPassword"
-  })
-  }else if(e=='b'){
-    router.push({
-    name:"login"
-  })
+      name: "adminEditPassword"
+    })
+  } else if (e == 'b') {
+    logout()
   }
+}
+const logout = () => {
+  toLogout({
+    id: userId.value
+  }).then(res => {
+    units.clearLocalStorage()
+    router.push({
+      name: "login"
+    })
+  })
 }
 </script>
 <style scoped lang="scss">
@@ -89,4 +104,5 @@ const handleCommand = (e) => {
       align-items: center;
     }
   }
-}</style>
+}
+</style>

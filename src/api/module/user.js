@@ -12,6 +12,9 @@ export function getRoleList(e) {
 export function toLogin(e) {
   return http.post("/user/toLogin", e)
 }
+export function toLogout(e) {
+  return http.post("/user/toLogout", e)
+}
 export function toEditUserPassword(e) {
   return http.post("/user/toEditUserPassword", e)
 }

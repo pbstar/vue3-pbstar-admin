@@ -70,6 +70,17 @@ function toLogin(req, res) {
     }
   })
 }
+function toLogout(req, res) {
+  let sql = 'UPDATE user SET token = "" WHERE id = "' + req.p.id + '"'
+  db.query(sql, result => {
+    if (result.affectedRows > 0) {
+      res.send({ code: 200, msg: '退出成功' })
+    }
+    else {
+      res.send({ code: 102, msg: '退出失败' })
+    }
+  })
+}
 function checkTokenFnc(type, req, res, next) {
   if (req.p.token == null || req.p.token == '' || req.p.token == undefined) {
     res.send({ code: 101, msg: 'token缺失' })
@@ -178,6 +189,7 @@ function toAddUser(req, res) {
 module.exports = {
   getUserList,
   toLogin,
+  toLogout,
   getInfoByToken,
   toEditUserPassword,
   toResetUserPassword,
