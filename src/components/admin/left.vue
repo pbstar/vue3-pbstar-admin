@@ -2,9 +2,7 @@
   <div class="fbox">
     <div class="topbox">
       <img class="logo" src="@/assets/imgs/logo.jpg" alt="" />
-      <transition name="show">
-        <h4 v-show="!isFold">{{ title }}</h4>
-      </transition>
+      <h4 v-show="!isFold">{{ title }}</h4>
     </div>
     <el-menu :default-active="defaultActive" class="midbox" background-color="#545c64" text-color="#fff"
       :collapse="isFold" unique-opened :collapse-transition="false">
@@ -148,4 +146,5 @@ onMounted(() => {
 
 
   }
-}</style>
+}
+</style>
