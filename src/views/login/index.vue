@@ -8,6 +8,11 @@
       <el-input class="password" placeholder="请输入密码" :show-password="true" type="password" prefix-icon="lock"
         v-model="password">
       </el-input>
+      <el-input class="verification" v-if="isLoginVerificationCode" placeholder="请输入验证码" v-model="verification"  prefix-icon="Connection">
+        <template #suffix>
+          <verificationCode :contentHeight="35" identifyCodes="23456789" @changeCode="changeCode"></verificationCode>
+        </template>
+      </el-input>
       <el-button class="btn" type="primary" @click="toSend" :loading="isLoading">登 录</el-button>
     </div>
   </div>
@@ -20,16 +25,33 @@ import config from "@/config";
 import units from "@/units";
 import { toLogin } from "@/api/module/user";
 import useUserStore from '@/stores/user'
+import verificationCode from "@/components/VerificationCode/index.vue"
 const userStore = useUserStore()
 const title = ref(config.title);
+const isLoginVerificationCode= ref(config.isLoginVerificationCode)
 const isLoading = ref(false);
 const account = ref("");
 const password = ref("");
+const verification = ref("");
 onMounted(() => {});
+let code=""
+const changeCode=(e)=>{
+  code=e
+}
 const toSend = () => {
   if (account.value === "" || password.value === "") {
     ElMessage.error("账号或密码不能为空")
     return
+  }
+  if(config.isLoginVerificationCode){
+    if(code===""){
+      ElMessage.error("验证码不能为空")
+      return
+    }
+    if(code!==verification.value){
+      ElMessage.error("验证码错误")
+      return
+    }
   }
   isLoading.value = true;
   toLogin({
@@ -93,13 +115,14 @@ const toSend = () => {
 
     ::v-deep(.el-input__prefix) {
       color: #bbb !important;
+      font-size: 16px;
     }
 
-    .account {
+    .account,.password {
       margin-bottom: 10px;
     }
 
-    .password {
+    .verification {
       margin-bottom: 15px;
     }
 
