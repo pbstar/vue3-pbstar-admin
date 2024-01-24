@@ -6,7 +6,11 @@ import 'nprogress/nprogress.css'
 import config from "@/config";
 import units from "@/units";
 
-let baseURL = config.baseUrl || (location.protocol+'//'+location.hostname+':8091/api');
+let baseURL = config.baseUrl;
+if (!baseURL) {
+  if (units.isDomain(location.hostname) && location.hostname != 'localhost') baseURL = location.protocol + '//' + location.hostname + '/api';
+  else baseURL = location.protocol + '//' + location.hostname + ':8091/api';
+}
 axios.defaults.timeout = config.timeOut;//设置超时时间，单位毫秒
 axios.defaults.retry = 2; //设置全局请求次数
 axios.defaults.retryDelay = 1000;//设置全局请求间隙

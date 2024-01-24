@@ -84,7 +84,11 @@ function formatDate(date, type) {
   } else {
     return "未知格式";
   }
-};
+}
+function isDomain(url) {  
+  var pattern = new RegExp("^(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,6}$");  
+  return pattern.test(url);  
+}
 export default {
   isMobile,
   strToBase64,
@@ -94,5 +98,6 @@ export default {
   removeLocalStorage,
   clearLocalStorage,
   getRandomStr,
-  formatDate
+  formatDate,
+  isDomain
 };
