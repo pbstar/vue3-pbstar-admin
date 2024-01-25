@@ -29,5 +29,4 @@ coverage
 
 *.tsbuildinfo
 
-
-/server/public/*
+/server/public/

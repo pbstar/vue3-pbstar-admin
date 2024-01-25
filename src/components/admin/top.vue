@@ -5,6 +5,7 @@
         <Fold v-show="!isCollapse" />
         <Expand v-show="isCollapse" />
       </el-icon>
+      <span class="pageName">{{ pageName }}</span>
     </div>
     <div class="trbox">
       <el-dropdown trigger="click" @command="handleCommand">
@@ -28,7 +29,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted ,watch} from 'vue'
 import { useRouter } from "vue-router";
 import { toLogout } from "@/api/module/user";
 import units from "@/units";
@@ -39,6 +40,10 @@ const emit = defineEmits(['changeFold'])
 const username = ref("")
 const userId = ref("")
 const isCollapse = ref(false)
+const pageName=ref("")
+watch(() => router.currentRoute.value, (newValue, oldValue) => {
+  pageName.value = newValue.meta.title
+}, { immediate: true })
 onMounted(() => {
   let userInfo = userStore.getInfo()
   username.value = userInfo.name
@@ -91,6 +96,11 @@ const logout = () => {
 
     .tlbreadcrumb {
       margin-left: 20px;
+    }
+    .pageName{
+      margin-left: 10px;
+      font-size: 14px;
+      color: #222;
     }
   }
 

@@ -7,8 +7,8 @@
     <el-menu :default-active="defaultActive" class="midbox" background-color="#545c64" text-color="#fff"
       :collapse="isFold" unique-opened :collapse-transition="false">
       <div v-for="(item, index) in list" :key="index">
-        <el-sub-menu :index="item.index" v-if="item.child">
-          <template slot="title">
+        <el-sub-menu :index="item.name" v-if="item.child">
+          <template #title>
             <component class="icons" :is="item.icon"></component>
             <span v-show="!isFold">{{ item.title }}</span>
           </template>
@@ -42,7 +42,7 @@ const list = ref([
   {
     name: "adminUser",
     title: "用户管理",
-    icon: "User",
+    icon: "User"
   }
 ])
 const defaultActive = ref("")
@@ -107,12 +107,13 @@ onMounted(() => {
       align-items: center;
     }
 
-    ::v-deep(.el-submenu__title) {
+    ::v-deep(.el-sub-menu__title) {
       height: 45px;
       line-height: 45px;
     }
 
-    ::v-deep(.el-menu-item span) {
+    ::v-deep(.el-menu-item span),
+    ::v-deep(.el-sub-menu__title span) {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -120,31 +121,18 @@ onMounted(() => {
       color: #fff;
     }
 
-    ::v-deep(.el-menu-item) .icons {
+
+    ::v-deep(.el-menu-item) .icons,
+    ::v-deep(.el-sub-menu__title) .icons {
       color: #fff;
     }
 
-    ::v-deep(.el-submenu__title) .icons {
-      color: #fff;
-    }
-
-    ::v-deep(.el-menu-item.is-active) .icons {
+    ::v-deep(.el-menu-item.is-active) .icons,
+    ::v-deep(.el-sub-menu__title.is-active) .icons,
+    ::v-deep(.el-menu-item.is-active) span,
+    ::v-deep(.el-sub-menu__title.is-active) span {
       color: var(--p-blue-color);
     }
-
-    ::v-deep(.el-submenu__title.is-active) .icons {
-      color: var(--p-blue-color);
-    }
-
-    ::v-deep(.el-menu-item.is-active) span {
-      color: var(--p-blue-color);
-    }
-
-    ::v-deep(.el-submenu__title.is-active) span {
-      color: var(--p-blue-color);
-    }
-
 
   }
-}
-</style>
+}</style>
