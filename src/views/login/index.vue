@@ -8,7 +8,8 @@
       <el-input class="password" placeholder="请输入密码" :show-password="true" type="password" prefix-icon="lock"
         v-model="password">
       </el-input>
-      <el-input class="verification" v-if="isLoginVerificationCode" placeholder="请输入验证码" v-model="verification"  prefix-icon="Connection">
+      <el-input class="verification" v-if="isLoginVerificationCode" placeholder="请输入验证码" v-model="verification"
+        prefix-icon="Connection">
         <template #suffix>
           <verificationCode :contentHeight="35" identifyCodes="23456789" @changeCode="changeCode"></verificationCode>
         </template>
@@ -19,8 +20,9 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 const router = useRouter()
+const route = useRoute()
 import config from "@/config";
 import units from "@/units";
 import { toLogin } from "@/api/module/user";
@@ -28,27 +30,32 @@ import useUserStore from '@/stores/user'
 import verificationCode from "@/components/VerificationCode/index.vue"
 const userStore = useUserStore()
 const title = ref(config.title);
-const isLoginVerificationCode= ref(config.isLoginVerificationCode)
+const isLoginVerificationCode = ref(config.isLoginVerificationCode)
 const isLoading = ref(false);
-const account = ref("");
-const password = ref("");
+const account = ref("admin");
+const password = ref("12345678");
 const verification = ref("");
-onMounted(() => {});
-let code=""
-const changeCode=(e)=>{
-  code=e
+let redirect_name = ""
+let redirect_url = ""
+onMounted(() => {
+  if (route.query.redirect_name) redirect_name = route.query.redirect_name
+  if (route.query.redirect_url) redirect_url = decodeURI(route.query.redirect_url)
+});
+let code = ""
+const changeCode = (e) => {
+  code = e
 }
 const toSend = () => {
   if (account.value === "" || password.value === "") {
     ElMessage.error("账号或密码不能为空")
     return
   }
-  if(config.isLoginVerificationCode){
-    if(code===""){
+  if (config.isLoginVerificationCode) {
+    if (code === "") {
       ElMessage.error("验证码不能为空")
       return
     }
-    if(code!==verification.value){
+    if (code !== verification.value) {
       ElMessage.error("验证码错误")
       return
     }
@@ -61,11 +68,15 @@ const toSend = () => {
     isLoading.value = false;
     if (res.code == 200) {
       ElMessage.success("登录成功")
-      userStore.changeInfo(res.data.info)
-      units.setLocalStorage("token", res.data.token);
-      router.push({
-        name: res.data.routeName
-      })
+      if (redirect_url) {
+        window.location.href = units.appendQueryParam(redirect_url, "token_key", res.data.token);  
+      } else {
+        userStore.changeInfo(res.data.info)
+        units.setLocalStorage("token", res.data.token);
+        router.push({
+          name: redirect_name ? redirect_name : res.data.routeName
+        })
+      }
     } else {
       ElMessage.error(res.msg)
     }
@@ -118,7 +129,8 @@ const toSend = () => {
       font-size: 16px;
     }
 
-    .account,.password {
+    .account,
+    .password {
       margin-bottom: 10px;
     }
 

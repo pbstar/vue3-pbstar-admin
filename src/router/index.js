@@ -65,7 +65,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.length > 0 && to.matched[0].name == "admin") {
     let token = units.getLocalStorage("token")
     if (!token) {
-      toLogin(next)
+      toLogin(from, next)
     } else {
       if (lastRequestTime && new Date().getTime() - lastRequestTime < config.checkTokenTime) {
         toCheckAuthority(next, to)
@@ -91,7 +91,7 @@ router.afterEach((to, from) => {
     }
   }
 })
-const toLogin = (next) => {
+const toLogin = (from, next) => {
   ElNotification({
     title: "提示",
     message: "登录失效，请重新登陆！",
@@ -103,6 +103,9 @@ const toLogin = (next) => {
   NProgress.start()
   next({
     name: "login",
+    query: {
+      redirect_name: from.name
+    }
   })
 }
 const toCheckToken = (next, token, to) => {
@@ -112,7 +115,7 @@ const toCheckToken = (next, token, to) => {
       userStore.changeInfo(res.data.info)
       toCheckAuthority(next, to)
     } else {
-      toLogin(next)
+      toLogin(from, next)
     }
   })
 }

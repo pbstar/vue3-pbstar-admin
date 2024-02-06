@@ -1,5 +1,5 @@
 # 【vue3-pbstar-admin】一款基于vue3和nodejs的简洁后台管理系统
-Vue3-pbstar-admin 是一个简洁的后台解决方案，提供了基础的用户体系和页面接口权限配置，方便用户进行自定义开发，避免不必要的代码冗余。该方案结合了 Vue3、Element-Plus、Pinia 和 Vite 等先进技术，实现高效的页面布局、状态管理和构建体验。同时，后端采用基于 Node.js 的 Express 框架和 MySQL 数据库，提供稳定的数据存储和高效的后台服务。
+Vue3-pbstar-admin 是一个简洁的后台解决方案，提供了基础的用户体系和页面接口权限配置，方便进行自定义开发，避免不必要的代码冗余。该方案结合了 Vue3、Element-Plus、Pinia 和 Vite 等先进技术，实现高效的页面布局、状态管理和构建体验。同时，后端采用基于 Node.js 的 Express 框架和 MySQL 数据库，提供稳定的数据存储和高效的后台服务。
 
 ## 项目开始
 项目GitHub地址： [https://github.com/pbstar/vue3-pbstar-admin](https://github.com/pbstar/vue3-pbstar-admin)

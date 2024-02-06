@@ -85,10 +85,22 @@ function formatDate(date, type) {
     return "未知格式";
   }
 }
-function isDomain(url) {  
-  var pattern = new RegExp("^(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,6}$");  
-  return pattern.test(url);  
+function isDomain(url) {
+  var pattern = new RegExp("^(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,6}$");
+  return pattern.test(url);
 }
+function appendQueryParam(url, key, value) {
+  const urlParts = url.split('?');
+  const baseUrl = urlParts[0];
+  const existingParams = urlParts.length > 1 ? urlParts[1].split('&') : [];
+  const newParam = `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+  const index = existingParams.findIndex(param => param.startsWith(`${key}=`));
+  if (index !== -1) existingParams[index] = newParam;
+  else existingParams.push(newParam);
+  const queryString = existingParams.join('&');
+  return queryString ? `${baseUrl}?${queryString}` : baseUrl;
+}
+
 export default {
   isMobile,
   strToBase64,
@@ -99,5 +111,6 @@ export default {
   clearLocalStorage,
   getRandomStr,
   formatDate,
-  isDomain
+  isDomain,
+  appendQueryParam
 };
