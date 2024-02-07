@@ -13,9 +13,9 @@
             <span v-show="!isFold">{{ item.title }}</span>
           </template>
           <el-menu-item v-for="(items, indexs) in item.child" :key="indexs + 's'" :index="items.name"
-            @click="toPage(items.name)">{{ items.title }}</el-menu-item>
+            @click="toPage(items)">{{ items.title }}</el-menu-item>
         </el-sub-menu>
-        <el-menu-item v-else :index="item.name" @click="toPage(item.name)">
+        <el-menu-item v-else :index="item.name" @click="toPage(item)">
           <component class="icons" :is="item.icon"></component>
           <span v-show="!isFold">{{ item.title }}</span>
         </el-menu-item>
@@ -28,35 +28,60 @@ import { ref, onMounted, watch } from 'vue'
 import { useRouter } from "vue-router";
 const router = useRouter()
 import config from "@/config";
-
+import navList from "@/assets/json/nav.json"
+import useUserStore from '@/stores/user'
+const userStore = useUserStore()
 const props = defineProps({
   isFold: Boolean,
 })
 const title = ref(config.title)
-const list = ref([
-  {
-    name: "adminHome",
-    title: "首页",
-    icon: "House",
-  },
-  {
-    name: "adminUser",
-    title: "用户管理",
-    icon: "User"
-  }
-])
+const list = ref([])
 const defaultActive = ref("")
 
 watch(() => router.currentRoute.value, (newValue, oldValue) => {
   defaultActive.value = newValue.name
 }, { immediate: true })
-
-const toPage = (name) => {
-  defaultActive.value = name
-  router.push({ name })
-}
 onMounted(() => {
+  let userInfo = userStore.getInfo()
+  getList(userInfo.authority)
 })
+const getList = (authority) => {
+  let userAuthorityArr = authority ? authority.split(",") : [];
+  let item = "";
+  list.value = [];
+  for (let i = 0; i < navList.length; i++) {
+    if (userAuthorityArr.includes(navList[i].name)) {
+      list.value.push(navList[i]);
+    } else {
+      if (navList[i].child) {
+        for (let j = 0; j < navList[i].child.length; j++) {
+          if (userAuthorityArr.includes(navList[i].child[j].name)) {
+            if (item) {
+              item.child.push(navList[i].child[j]);
+            } else {
+              item = {
+                name: navList[i].name,
+                icon: navList[i].icon,
+                title: navList[i].title,
+                child: [navList[i].child[j]],
+              };
+            }
+          }
+        }
+        if (item) {
+          list.value.push(item);
+          item = "";
+        }
+      }
+    }
+  }
+}
+const toPage = (e) => {
+  defaultActive.value = e.name
+  if (e.query) router.push({ name: e.name, query: e.query })
+  else router.push({ name: e.name })
+}
+
 </script>
 <style scoped lang="scss">
 .fbox {
@@ -135,4 +160,5 @@ onMounted(() => {
     }
 
   }
-}</style>
+}
+</style>

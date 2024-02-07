@@ -1,0 +1,12 @@
+[
+  {
+    "name": "adminHome",
+    "title": "首页",
+    "icon": "House"
+  },
+  {
+    "name": "adminUser",
+    "title": "用户管理",
+    "icon": "User"
+  }
+]

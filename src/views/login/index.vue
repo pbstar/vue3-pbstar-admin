@@ -8,7 +8,7 @@
       <el-input class="password" placeholder="请输入密码" :show-password="true" type="password" prefix-icon="lock"
         v-model="password">
       </el-input>
-      <el-input class="verification" v-if="isLoginVerificationCode" placeholder="请输入验证码" v-model="verification"
+      <el-input class="verification" v-if="isLoginVerificationCode" placeholder="请输入验证码" v-model="verification" @keyup.enter="toSend"
         prefix-icon="Connection">
         <template #suffix>
           <verificationCode :contentHeight="35" identifyCodes="23456789" @changeCode="changeCode"></verificationCode>
